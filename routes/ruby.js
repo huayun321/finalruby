@@ -1,17 +1,29 @@
 var express = require('express');
 var router = express.Router();
 var Template = require('../models/template');
-/* GET home page. */
-router.get('/', function(req, res) {
 
-    Template.findById("54c28fd4770fd50f578c7e66", function(err, template) {
+/* GET template list  page. */
+router.get('/', function(req, res) {
+    Template.find({}).exec(function(err, templates) {
+        if (err) {
+            console.log("db error in GET /templates: " + err);
+            res.render('500');
+        } else {
+            res.render('ruby/list', {title:'模板列表', templates: templates});
+        }
+    });
+});
+
+/* GET ruby page by template name. */
+router.get('/:id', function(req, res) {
+
+    Template.findById(req.params.id, function(err, template) {
         if (err) {
             console.log("db find error in get /template/" + "id" + ": " + err);
             res.render('500');
         } else if (!template) {
             res.render('404');
         } else {
-            console.log("=============tname" + template.obj);
             res.render('ruby/board', {title:'ruby', template: template});
         }
     });
