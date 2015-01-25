@@ -7,8 +7,26 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var ruby = require('./routes/ruby');
+
+var mongoose = require('mongoose');
+var gridform = require('gridform');
 
 var app = express();
+
+// database connection
+mongoose.connect('mongodb://localhost/ff3');
+var db = mongoose.connection;
+
+db.on('error', function(msg) {
+    console.log('Mongoose connection error %s', msg);
+});
+
+db.once('open', function() {
+    console.log('Mongoose connection established');
+    gridform.db = db.db;
+    gridform.mongo = mongoose.mongo;
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -24,6 +42,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/ruby', ruby);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
