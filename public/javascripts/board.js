@@ -6,11 +6,18 @@ $( document ).ready(function() {
 
     //initial canvas and crop canvas and some global var
     var canvas = new fabric.Canvas('canvas');
+    canvas.setBackgroundColor('white', canvas.renderAll.bind(canvas));
     var m_canvas = new fabric.Canvas('modal-canvas');
     var stamp = null;
 
     //initial canvas from template.json
     canvas.loadFromJSON(json, canvas.renderAll.bind(canvas));
+    canvas.getObjects().map(function(o) {
+        o.set('lockMovementY', true);
+        o.set('lockMovementX', true);
+        o.set('hasControls', false);
+        return;
+    });
 
     //on click save
     $('#save').click(function() {
@@ -44,6 +51,9 @@ $( document ).ready(function() {
                 iimg.filters.push( new fabric.Image.filters.Mask( { 'mask': mimg, channel:3} ) );
 
                 iimg.applyFilters(canvas.renderAll.bind(canvas));
+                iimg.lockMovementY = true;
+                iimg.lockMovementX = true;
+                iimg.hasControls = false;
                 canvas.add(iimg);
                 canvas.remove(stamp);
 
@@ -68,6 +78,9 @@ $( document ).ready(function() {
         stamp = fabric.util.object.clone(canvas.getActiveObject());
         stamp.hasControls = false;
         stamp.opacity = 0.5;
+        stamp.lockMovementY = false;
+        stamp.lockMovementX = false;
+
 //        load img
         fabric.Image.fromURL(img_src, function (oimg) {
             if (oimg.width > 750) {
