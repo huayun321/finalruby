@@ -22,26 +22,18 @@
 
 <body>
 <!--sidebar -->
-<div class="ui vertical sidebar menu">
-    <a class="item">
-        <i class="home icon"></i>
-        主页
-    </a>
-    <a class="active item">
-        <i class="heart icon"></i>
-        当前区域
-    </a>
-    <a class="item">
-        <i class="facebook icon"></i>
-        Facebook
-    </a>
+<div class="ui vertical thin sidebar menu">
     <div class="item">
-        <b>更多</b>
-        <div class="menu">
-            <a class="item">关于</a>
-            <a class="item">联系我们</a>
-        </div>
+        <button id="save" class="ui blue small button">保存宝石</button>
     </div>
+
+    <div class="item">
+        <button id="img-add" class="ui red small button">添加图片</button>
+        <input style="display: none" type="file" id="files" name="files[]" multiple /><br>
+
+    </div>
+
+
 </div>
 
 <div id="btn_sidebar"  style="top:50px" class="ui top fixed small teal button">
@@ -83,7 +75,7 @@
         <div class="ui blue  piled attached segment">
             <div class="ui blue header">
                 讨论区
-                <div id="save" class="ui button">save</div>
+
             </div>
             <div class="ui divider"></div>
             <canvas id="canvas" width="1050" height="1500" style=" border: 1px solid black">
