@@ -58,20 +58,16 @@ $( document ).ready(function() {
     //$('#imgbox > img').click(function(e) {
     function handle_img_click(e) {
         var img_src = e.target.src || $(e.target).children().first().attr('src');
-        stamp = canvas.getActiveObject();
+        //stamp = canvas.getActiveObject();
         console.log("===========e.target.src" + e.target.src);
         console.log("===========img click");
 //        function handle_img_click(e) {
         if(!canvas.getActiveObject()) {
             return alert('请先在画板中选择一个图案，再点击图片剪切。');
         };
-//            canvas.getActiveObject().clone(function (o) {
-////                o.opacity = 0.5;
-//                stamp = o;
-//                console.log(o);
-//                console.log("===========getActiveObject");
-////                stamp.hasControls = false;
-//            });
+        stamp = fabric.util.object.clone(canvas.getActiveObject());
+        stamp.hasControls = false;
+        stamp.opacity = 0.5;
 //        load img
         fabric.Image.fromURL(img_src, function (oimg) {
             if (oimg.width > 750) {
@@ -82,11 +78,6 @@ $( document ).ready(function() {
             m_canvas.add(oimg);
             oimg.setCoords();
 
-            var circle = new fabric.Circle({
-                radius: stamp.radius, fill: '#cccccc', left: 0, top: 0, opacity: 0.5
-            });
-
-            stamp = circle;
 
 
             m_canvas.centerObject(stamp);
