@@ -57,4 +57,10 @@ bbs发帖
         并生成缩略图
         保存 ruby modal
             tag modal
+    步骤
+    1、初始化并测试socket io 到 express
+    2、测试上传一个 简单数据
+    3、测试上传 blog图片
+    4、测试上传进度
+    5、测试上传图片兼数据 到mongodb
 
