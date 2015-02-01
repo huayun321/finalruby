@@ -59,6 +59,7 @@ bbs发帖
             tag modal
     步骤
     1、初始化并测试socket io 到 express
+        初始化socket.io-stream 并测试
     2、测试上传一个 简单数据
     3、测试上传 blog图片
     4、测试上传进度

@@ -22,6 +22,7 @@
     "gridform": "*",
     "gm": "*",
 
-    "socket.io": "*"
+    "socket.io": "*",
+    "socket.io-stream": "*"
   }
 }
