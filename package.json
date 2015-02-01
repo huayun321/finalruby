@@ -20,6 +20,8 @@
     "connect-flash": "*",
 
     "gridform": "*",
-    "gm": "*"
+    "gm": "*",
+
+    "socket.io": "*"
   }
 }
