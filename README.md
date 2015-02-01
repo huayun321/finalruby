@@ -43,3 +43,18 @@ finalruby
 再完成上传
 bbs发帖
 ###保存时的 form验证
+
+
+
+
+###使用socketio 制作 canvas图片的 保存 并显示上传之进度
+    逻辑
+    1、canvas to dataurl 得到base 64的图片
+    2、使用函数将 base64 图片 转换为 html5 blob
+    3、使用 socket io blob stream 将 blob图片 并客户其他 参数 stream到 server
+    4、socket server 将 图片流入 gridstream
+        并触发事件 将 上传进度 发送至客户端
+        并生成缩略图
+        保存 ruby modal
+            tag modal
+
