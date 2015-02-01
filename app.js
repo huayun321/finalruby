@@ -14,6 +14,17 @@ var gridform = require('gridform');
 
 var app = express();
 
+//socket.io thing
+var server = require('http').Server(app);
+server.listen(3000);
+
+var io = require('socket.io')(server);
+
+
+io.on('connection', function(socket){
+    console.log('a user connected');
+});
+
 // database connection
 mongoose.connect('mongodb://localhost/ff3');
 var db = mongoose.connection;
