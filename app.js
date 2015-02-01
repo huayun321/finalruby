@@ -19,10 +19,19 @@ var server = require('http').Server(app);
 server.listen(3000);
 
 var io = require('socket.io')(server);
+var ss = require('socket.io-stream');
+var path = require('path');
+var fs = require('fs');
 
+io.of('/user').on('connection', function(socket) {
+    console.log("connection");
 
-io.on('connection', function(socket){
-    console.log('a user connected');
+    ss(socket).on('profile-image', function(stream, data) {
+        console.log("saving...");
+        console.log(data)
+        stream.pipe(fs.createWriteStream("copy.png"));
+    });
+
 });
 
 // database connection

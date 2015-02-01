@@ -19,11 +19,66 @@ $( document ).ready(function() {
         return;
     });
 
-    //on click save
-    $('#save').click(function() {
-        var png = canvas.toDataURL();
-        window.location.replace(png);
+
+    //socket.io thing
+    $(function() {
+        var socket = io.connect('http://localhost:3000/user');
+
+        socket.on("connect",function() {
+            console.log("on connect");
+        });
+
+        function dataURItoBlob(dataURI) {
+            // convert base64/URLEncoded data component to raw binary data held in a string
+            var byteString;
+            if (dataURI.split(',')[0].indexOf('base64') >= 0)
+                byteString = atob(dataURI.split(',')[1]);
+            else
+                byteString = unescape(dataURI.split(',')[1]);
+
+            // separate out the mime component
+            var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+            // write the bytes of the string to a typed array
+            var ia = new Uint8Array(byteString.length);
+            for (var i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+
+            return new Blob([ia], {type:mimeString});
+        }
+
+        $('#save').click(function() {
+            var png = canvas.toDataURL();
+            var blob = dataURItoBlob(png);
+            console.log('uploading...',blob);
+
+
+            var stream = ss.createStream();
+            var blobStream = ss.createBlobReadStream(blob);
+            var uploaded = 0;
+            var total = blob.size;
+            blobStream.on('data', function(chunk) {
+                uploaded += chunk.length;
+                console.log(uploaded / total * 100);
+                console.log('data chunk.length:',chunk.length);
+            });
+
+            blobStream.on('end', function() {
+                console.log('end');
+            });
+
+            ss(socket).emit('profile-image', stream);
+            blobStream.pipe(stream);
+        });
+
     });
+
+    //on click save
+    //$('#save').click(function() {
+    //    var png = canvas.toDataURL();
+    //    window.location.replace(png);
+    //});
 
     //on click crop
     $('#crop').click(function() {

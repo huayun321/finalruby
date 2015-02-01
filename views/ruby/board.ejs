@@ -18,8 +18,10 @@
     <script src="/javascripts/fabric.min.js"></script>
     <!--socket io-->
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/socket.io-stream.js"></script>
     <script>
-        var socket = io();
+
+
     </script>
 
 </head>
@@ -79,7 +81,7 @@
         <div class="ui blue  piled attached segment">
             <div class="ui blue header">
                 讨论区
-
+                <input id="file" type="file" />
             </div>
             <div class="ui divider"></div>
             <canvas id="canvas" width="1050" height="1500" style=" border: 1px solid black">
