@@ -75,7 +75,7 @@ $( document ).ready(function() {
                 console.log('end');
             });
 
-            ss(socket).emit('profile-image', stream, {size:blob.size, other:'hello'});
+            ss(socket).emit('profile-image', stream, {size:blob.size, tags: $('#input_tags').val()});
             blobStream.pipe(stream);
         });
 

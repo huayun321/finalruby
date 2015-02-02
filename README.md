@@ -64,4 +64,9 @@ bbs发帖
     3、测试上传 blog图片
     4、测试上传进度
     5、测试上传图片兼数据 到mongodb
+        初始化一个id 一个write stream
+        pipe
+        on data on error on end
+        gm
+        ruby
 

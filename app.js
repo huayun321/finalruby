@@ -13,6 +13,7 @@ var mongoose = require('mongoose');
 var gridform = require('gridform');
 var Grid = require('gridform').gridfsStream;
 var gm = require('gm');
+var Ruby = require('./models/ruby');
 
 var app = express();
 
@@ -24,6 +25,7 @@ var io = require('socket.io')(server);
 var ss = require('socket.io-stream');
 var path = require('path');
 var fs = require('fs');
+var gfs = null;
 
 //async
 var async = require('async');
@@ -39,8 +41,7 @@ db.on('error', function(msg) {
 
 db.once('open', function() {
     console.log('Mongoose connection established');
-    gridform.db = db.db;
-    gridform.mongo = mongoose.mongo;
+
 });
 
 //socket.io logic
@@ -49,34 +50,78 @@ io.of('/user').on('connection', function(socket) {
 
     ss(socket).on('profile-image', function(stream, data) {
         console.log("saving...");
-        console.log(data)
+        //process tags
+        data.tags = data.tags || null;
+        if(data.tags && (data.tags != '') ) {
+            data.tags = data.tags.split(' ');
+            var tags = [];
+            data.tags.forEach(function(tag) {
+               if (tag != ' ') {
+                   tags.push(tag);
+               }
+            });
+            data.tags = tags;
+        }
+        //init id gfs stream
+        gfs = Grid(mongoose.connection.db, mongoose.mongo);
+        //var iid = mongoose.Types.ObjectId();
+        var writestream = gfs.createWriteStream({
+            //_id: iid.toString(),
+            mode: 'w',
+            content_type: 'image/png'
+        });
+        var tws = gfs.createWriteStream({
+            mode: 'w',
+            filename: 'thumbnail' + '.png',
+            content_type: 'image/png'
+        });
 
         //progress
-        var uploaded = 0;
+        var uploaded = -1000;
         var progress = 0;
-        stream.on('data', function(chunk) {
-            uploaded+= chunk.length;
+        stream.on('data', function (chunk) {
+            uploaded += chunk.length;
             progress = uploaded / data.size * 100;
             socket.emit('progress', progress);
-            console.log("onupload progress:" + data.other + uploaded / data.size * 100);
+            console.log("onupload progress:" + uploaded / data.size * 100);
         });
-        stream.on('end', function() {
-            progress = 100;
-            socket.emit('progress', progress);
+        stream.on('end', function () {
+            console.log('ws.id========' + writestream.id );
+            console.log('tws.id========' + tws.id );
+            var ruby = new Ruby({
+                imgId: writestream.id,
+                thumbnailId: tws.id,
+                tags: data.tags,
+                nice: false
+                //user_id:
+            });
+
+            ruby.save(function (err) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                progress = 100;
+                socket.emit('progress', progress);
+            })
+
         });
 
         //error
-        stream.on('error', function(err) {
+        stream.on('error', function (err) {
             console.log(err);
             socket.emit('stream-error', err);
         });
 
         //save to grid
-        var gfs = Grid(mongoose.connection.db, mongoose.mongo);
-        var wid = mongoose.Types.ObjectId();
-        stream.pipe(fs.createWriteStream("copy.png"));
-    });
 
+
+        stream.pipe(writestream);
+        gm(stream)
+            .resize('200', '200')
+            .stream('png')
+            .pipe(tws);
+    });
 });
 
 
