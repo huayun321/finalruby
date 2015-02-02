@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var ruby = require('./routes/ruby');
+var gfsimgs = require('./routes/gfsimgs');
 
 var mongoose = require('mongoose');
 var gridform = require('gridform');
@@ -140,6 +141,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 app.use('/ruby', ruby);
+app.use('/gfsimgs', gfsimgs);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

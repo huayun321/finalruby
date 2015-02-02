@@ -3,7 +3,14 @@ function show_detail() {
         .modal('show')
     ;
 };
-function show_img() {
+function show_img(path) {
+    var _img = document.getElementById('big_ruby');
+    var newImg = new Image;
+    newImg.onload = function() {
+        _img.src = this.src;
+    }
+    newImg.src = path;
+
     $('#imodal')
         .modal('show')
     ;
