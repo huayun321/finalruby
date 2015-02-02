@@ -11,6 +11,8 @@ var ruby = require('./routes/ruby');
 
 var mongoose = require('mongoose');
 var gridform = require('gridform');
+var Grid = require('gridform').gridfsStream;
+var gm = require('gm');
 
 var app = express();
 
@@ -23,32 +25,9 @@ var ss = require('socket.io-stream');
 var path = require('path');
 var fs = require('fs');
 
-io.of('/user').on('connection', function(socket) {
-    console.log("connection");
+//async
+var async = require('async');
 
-    ss(socket).on('profile-image', function(stream, data) {
-        console.log("saving...");
-        console.log(data)
-        var uploaded = 0;
-        var progress = 0;
-        stream.on('data', function(chunk) {
-            uploaded+= chunk.length;
-            progress = uploaded / data.size * 100;
-            socket.emit('progress', progress);
-            console.log("onupload progress:" + data.other + uploaded / data.size * 100);
-        });
-        stream.on('end', function() {
-            progress = 100;
-            socket.emit('progress', progress);
-        });
-        stream.on('error', function(err) {
-           console.log(err);
-            socket.emit('stream-error', err);
-        });
-        stream.pipe(fs.createWriteStream("copy.png"));
-    });
-
-});
 
 // database connection
 mongoose.connect('mongodb://localhost/ff3');
@@ -63,6 +42,43 @@ db.once('open', function() {
     gridform.db = db.db;
     gridform.mongo = mongoose.mongo;
 });
+
+//socket.io logic
+io.of('/user').on('connection', function(socket) {
+    console.log("connection");
+
+    ss(socket).on('profile-image', function(stream, data) {
+        console.log("saving...");
+        console.log(data)
+
+        //progress
+        var uploaded = 0;
+        var progress = 0;
+        stream.on('data', function(chunk) {
+            uploaded+= chunk.length;
+            progress = uploaded / data.size * 100;
+            socket.emit('progress', progress);
+            console.log("onupload progress:" + data.other + uploaded / data.size * 100);
+        });
+        stream.on('end', function() {
+            progress = 100;
+            socket.emit('progress', progress);
+        });
+
+        //error
+        stream.on('error', function(err) {
+            console.log(err);
+            socket.emit('stream-error', err);
+        });
+
+        //save to grid
+        var gfs = Grid(mongoose.connection.db, mongoose.mongo);
+        var wid = mongoose.Types.ObjectId();
+        stream.pipe(fs.createWriteStream("copy.png"));
+    });
+
+});
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

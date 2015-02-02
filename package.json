@@ -23,6 +23,7 @@
     "gm": "*",
 
     "socket.io": "*",
-    "socket.io-stream": "*"
+    "socket.io-stream": "*",
+    "async": "*"
   }
 }
