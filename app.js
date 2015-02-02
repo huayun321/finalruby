@@ -29,6 +29,22 @@ io.of('/user').on('connection', function(socket) {
     ss(socket).on('profile-image', function(stream, data) {
         console.log("saving...");
         console.log(data)
+        var uploaded = 0;
+        var progress = 0;
+        stream.on('data', function(chunk) {
+            uploaded+= chunk.length;
+            progress = uploaded / data.size * 100;
+            socket.emit('progress', progress);
+            console.log("onupload progress:" + data.other + uploaded / data.size * 100);
+        });
+        stream.on('end', function() {
+            progress = 100;
+            socket.emit('progress', progress);
+        });
+        stream.on('error', function(err) {
+           console.log(err);
+            socket.emit('stream-error', err);
+        });
         stream.pipe(fs.createWriteStream("copy.png"));
     });
 

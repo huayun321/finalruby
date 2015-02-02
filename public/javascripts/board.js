@@ -28,6 +28,14 @@ $( document ).ready(function() {
             console.log("on connect");
         });
 
+        socket.on('progress', function(data) {
+            $('.bar').css('width', data+'%');
+            if(data == 100) {
+                $('#upload_over').removeClass('disabled');
+                $('#upload_cancel').removeClass('disabled');
+            }
+        });
+
         function dataURItoBlob(dataURI) {
             // convert base64/URLEncoded data component to raw binary data held in a string
             var byteString;
@@ -48,7 +56,8 @@ $( document ).ready(function() {
             return new Blob([ia], {type:mimeString});
         }
 
-        $('#save').click(function() {
+        $('#upload').click(function() {
+            $('#upload_cancel').addClass('disabled');
             var png = canvas.toDataURL();
             var blob = dataURItoBlob(png);
             console.log('uploading...',blob);
@@ -56,11 +65,9 @@ $( document ).ready(function() {
 
             var stream = ss.createStream();
             var blobStream = ss.createBlobReadStream(blob);
-            var uploaded = 0;
-            var total = blob.size;
+
             blobStream.on('data', function(chunk) {
-                uploaded += chunk.length;
-                console.log(uploaded / total * 100);
+
                 console.log('data chunk.length:',chunk.length);
             });
 
@@ -68,17 +75,19 @@ $( document ).ready(function() {
                 console.log('end');
             });
 
-            ss(socket).emit('profile-image', stream);
+            ss(socket).emit('profile-image', stream, {size:blob.size, other:'hello'});
             blobStream.pipe(stream);
         });
 
     });
 
     //on click save
-    //$('#save').click(function() {
-    //    var png = canvas.toDataURL();
-    //    window.location.replace(png);
-    //});
+    $('#save').click(function() {
+        $('#upload_form').modal('setting', 'closable', false)
+                         .modal('show');
+        $('#upload_over').addClass('disabled');
+        $('.bar').css('width', 0+'%');
+    });
 
     //on click crop
     $('#crop').click(function() {

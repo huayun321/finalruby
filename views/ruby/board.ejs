@@ -103,6 +103,38 @@
         </div>
     </div>
 
+    <div id="upload_form" class="ui modal">
+        <div class="header">
+            上传宝石
+        </div>
+        <div class="content">
+            <div class="ui form ">
+                <div class="field">
+                    <label>标签</label>
+                    <div class="ui left labeled icon input">
+                        <input type="text" placeholder="请使用逗号分隔标签，例如：美顔,萝莉,小鲜肉">
+                        <i class="user icon"></i>
+                        <div class="ui corner label">
+                            <i class="icon asterisk"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui error message">
+                    <div class="header">发生了错误</div>
+                </div>
+                <div class="ui blue progress">
+                    <div class="bar" style="width:0%"></div>
+                </div>
+                <div id="upload" class="ui blue submit button">上传</div>
+            </div>
+        </div>
+        <div class="actions">
+            <div id="upload_cancel" class="ui button">取消</div>
+            <div id="upload_over"  class="ui button">完成</div>
+        </div>
+    </div>
+
 <script>
     var json =<%- JSON.stringify(template.obj) %>;
 
