@@ -69,4 +69,8 @@ bbs发帖
         on data on error on end
         gm
         ruby
-
+###发帖 发评论 发图
+    1、列出类别
+    2、发帖
+    3、列出帖
+    4、回帖
