@@ -1,4 +1,91 @@
 $( document ).ready(function() {
+    var input_title = '';
+    var input_content = '';
+    var category_id = '';
+
+    //socket.io thing
+    $(function() {
+        var socket = io.connect('http://localhost:3000/bbs');
+
+        socket.on("connect",function() {
+            console.log("on connect");
+        });
+
+        socket.on('progress', function(data) {
+            console.log('progress === ' + data.img_num + " " + data.progress+'%');
+            $('#bar'+data.img_num).css('display', 'block');
+            $('#bar'+data.img_num + ' > div').css('width', data.progress+'%');
+
+        });
+
+        //uploaded
+        var uploaded_img = 0;
+        var wids = [];
+        var tids = [];
+        socket.on('end-upload', function(data) {
+            wids.push(data.wid);
+            tids.push(data.tid);
+            console.log('end-upload ==== ' + data.sum);
+            uploaded_img++;
+            if(uploaded_img == data.sum) {
+                socket.emit('post', {title: input_title, content:input_content, category_id:category_id, wids:wids, tids:tids});
+            }
+
+        });
+
+        socket.on('all-end', function(data) {
+            window.location.replace('http://localhost:3000/bbs/category/'+ category_id);
+        });
+
+        function dataURItoBlob(dataURI) {
+            // convert base64/URLEncoded data component to raw binary data held in a string
+            var byteString;
+            if (dataURI.split(',')[0].indexOf('base64') >= 0)
+                byteString = atob(dataURI.split(',')[1]);
+            else
+                byteString = unescape(dataURI.split(',')[1]);
+
+            // separate out the mime component
+            var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+            // write the bytes of the string to a typed array
+            var ia = new Uint8Array(byteString.length);
+            for (var i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+
+            return new Blob([ia], {type:mimeString});
+        }
+
+        $('#post').click(function() {
+            input_title = $('#input_title').val();
+            input_content =  CKEDITOR.instances.input_content.getData();
+            category_id = $('#category_id').val();
+            $('#post').addClass('disabled');
+            $('#img-add').addClass('disabled');
+            var sum = $('#img_box').children().length;
+            if(sum <= 0 ) {
+                socket.emit('post', {title: input_title, content:input_content, category_id:category_id});
+            }
+
+            var img_num = 0;
+            $('#img_box > img').each(function() {
+
+                img_num ++;
+                var base64img = $(this).prop('src');
+                var blob = dataURItoBlob(base64img);
+                console.log('uploading...',blob);
+
+                var stream = ss.createStream();
+                var blobStream = ss.createBlobReadStream(blob);
+                ss(socket).emit('img', stream, {size:blob.size, img_num:img_num, sum: sum});
+                blobStream.pipe(stream);
+            });
+
+        });
+
+    });
+
     /*
      *  browser upload img
      * */
@@ -13,17 +100,9 @@ $( document ).ready(function() {
 
     browser_check();
 
-    function imgs_sum_check() {
-
-    }
-
 
     function handleFileSelect(evt) {
-        if($('#img_box img'). length >=4) {
-            alert('不能一次上传超过4张图片');
-            return;
-        }
-
+        $('#img_box').empty();
         var files = evt.target.files;
 
         //loop throuth the FileList and render image files as thumbnails.
@@ -31,6 +110,9 @@ $( document ).ready(function() {
 
             //only process image files.
             if (!f.type.match('image.*')) {
+                continue;
+            }
+            if (i >= 4) {
                 continue;
             }
 
@@ -61,5 +143,7 @@ $( document ).ready(function() {
         $('#files').click();
         return false;
     });
+
+
 
 });
