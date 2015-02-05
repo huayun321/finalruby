@@ -124,6 +124,8 @@ io.of('/user').on('connection', function(socket) {
             .stream('png')
             .pipe(tws);
     });
+
+
 });
 
 

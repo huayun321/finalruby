@@ -15,17 +15,17 @@ router.get('/', function(req, res) {
     });
 });
 
-/* GET ruby page by template name. */
-router.get('/:id', function(req, res) {
+/* GET bbs post form by category id. */
+router.get('/new-post/category/:id', function(req, res) {
 
-    Template.findById(req.params.id, function(err, template) {
+    Category.findById(req.params.id, function(err, category) {
         if (err) {
-            console.log("db find error in get /template/" + "id" + ": " + err);
+            console.log("db find error in get /category/" + "id" + ": " + err);
             res.render('500');
-        } else if (!template) {
+        } else if (!category) {
             res.render('404');
         } else {
-            res.render('ruby/board', {title:'ruby', template: template});
+            res.render('bbs/post_form', {title:'发帖', category: category});
         }
     });
 
