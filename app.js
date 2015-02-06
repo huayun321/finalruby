@@ -66,8 +66,8 @@ io.of('/bbs').on('connection', function(socket) {
             content: data.content,
             imgs: data.wids,
             thumbnails: data.tids,
-            categoryId: data.category_id
-            //user_id:
+            category: {id:data.category_id, name:data.category_name}
+            //user: {}
         });
 
         post.save(function (err) {

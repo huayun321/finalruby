@@ -80,5 +80,8 @@ bbs发帖
             todo util image js redirect url 在部署时候需要修改
     3、列出帖
         单个社区列表页面
+            todo 分页
+            todo post schema 用户的索引 {user:id, username:username}
         单个帖页面
+            post schema 改结构 categoryid category userid user
     4、回帖

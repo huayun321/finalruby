@@ -7,8 +7,14 @@ var schema = mongoose.Schema({
   createdOn: { type: Date, default: Date.now },
   imgs:[mongoose.Schema.Types.ObjectId],
   thumbnails:[mongoose.Schema.Types.ObjectId],
-  categoryId: mongoose.Schema.Types.ObjectId,
-  userId: mongoose.Schema.Types.ObjectId
+  category: {
+      id: mongoose.Schema.Types.ObjectId,
+      name: String
+  },
+  user: {
+      id: mongoose.Schema.Types.ObjectId,
+      username: String
+  }
 });
 
 var Post = mongoose.model('posts', schema);

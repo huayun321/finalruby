@@ -47,7 +47,7 @@ router.get('/category/:id', function(req, res) {
         } else if (!category) {
             res.render('404');
         } else {
-            Post.find({categoryId: req.params.id}).exec(function(err, posts) {
+            Post.find({'category.id':req.params.id}).exec(function(err, posts) {
 
                 if (err) {
                     console.log("db error in GET /categorys: " + err);

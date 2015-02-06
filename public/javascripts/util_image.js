@@ -2,6 +2,7 @@ $( document ).ready(function() {
     var input_title = '';
     var input_content = '';
     var category_id = '';
+    var category_name = '';
 
     //socket.io thing
     $(function() {
@@ -28,7 +29,11 @@ $( document ).ready(function() {
             console.log('end-upload ==== ' + data.sum);
             uploaded_img++;
             if(uploaded_img == data.sum) {
-                socket.emit('post', {title: input_title, content:input_content, category_id:category_id, wids:wids, tids:tids});
+                socket.emit('post', {title: input_title,
+                                     content:input_content,
+                                     category_id:category_id,
+                                     category_name:category_name,
+                                     wids:wids, tids:tids});
             }
 
         });
@@ -61,11 +66,12 @@ $( document ).ready(function() {
             input_title = $('#input_title').val();
             input_content =  CKEDITOR.instances.input_content.getData();
             category_id = $('#category_id').val();
+            category_name = $('#category_name').val();
             $('#post').addClass('disabled');
             $('#img-add').addClass('disabled');
             var sum = $('#img_box').children().length;
             if(sum <= 0 ) {
-                socket.emit('post', {title: input_title, content:input_content, category_id:category_id});
+                socket.emit('post', {title: input_title, content:input_content, category_id:category_id,category_name:category_name});
             }
 
             var img_num = 0;
