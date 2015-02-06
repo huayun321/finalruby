@@ -7,6 +7,8 @@ var mongoose = require('mongoose');
 var Grid = require('gridform').gridfsStream;
 var gm = require('gm');
 var moment = require('moment-timezone');
+var async = require('async');
+
 
 
 /* GET template list  page. */
@@ -16,6 +18,7 @@ router.get('/', function(req, res) {
             console.log("db error in GET /categorys: " + err);
             res.render('500');
         } else {
+
             res.render('bbs/index', {title:'918diy社区', categorys: categorys});
         }
     });
@@ -57,6 +60,23 @@ router.get('/category/:id', function(req, res) {
                     res.render('bbs/list', {title:category.name, category:category, posts: posts});
                 }
             });
+        }
+    });
+
+});
+
+/* GET article list by category id. */
+router.get('/post/:id', function(req, res) {
+    //console.log(req.params.id);
+    Post.findById(req.params.id, function(err, post) {
+        if (err) {
+            console.log("db find error in get /post/" + "id" + ": " + err);
+            res.render('500');
+        } else if (!post) {
+            res.render('404');
+        } else {
+            res.render('bbs/post', {title:post.title, post:post});
+
         }
     });
 

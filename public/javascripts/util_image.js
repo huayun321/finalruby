@@ -24,6 +24,7 @@ $( document ).ready(function() {
         var wids = [];
         var tids = [];
         socket.on('end-upload', function(data) {
+            console.log("wid + tid " + data.wid + "===" + data.tid);
             wids.push(data.wid);
             tids.push(data.tid);
             console.log('end-upload ==== ' + data.sum);

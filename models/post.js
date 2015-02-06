@@ -17,6 +17,13 @@ var schema = mongoose.Schema({
   }
 });
 
+//schema.statics.getPostsByCategorys = function (categorys, cb) {
+//    categorys.foreach(function(category) {
+//        this.find({ name: new RegExp(name, 'i') }, cb);
+//    });
+//
+//}
+
 var Post = mongoose.model('posts', schema);
 module.exports = Post;
 

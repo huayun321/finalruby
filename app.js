@@ -97,6 +97,7 @@ io.of('/bbs').on('connection', function(socket) {
             console.log("on upload progress:" + uploaded / data.size * 100);
         });
         stream.on('end', function () {
+            console.log('wid and tid ' + writestream.id + "===" + tws.id);
             socket.emit('end-upload', {sum: data.sum, wid:writestream.id, tid: tws.id});
         });
 

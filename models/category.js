@@ -6,6 +6,8 @@ var schema = mongoose.Schema({
     date: { type: Date, default: Date.now }
 });
 
+
+
 var Category = mongoose.model('category', schema);
 module.exports = Category;
 
