@@ -6,6 +6,8 @@ var gridform = require('gridform');
 var mongoose = require('mongoose');
 var Grid = require('gridform').gridfsStream;
 var gm = require('gm');
+var moment = require('moment-timezone');
+
 
 /* GET template list  page. */
 router.get('/', function(req, res) {
@@ -35,72 +37,31 @@ router.get('/new-post/category/:id', function(req, res) {
 
 });
 
-router.post('/new', function(req, res) {
-    var form = gridform();
+/* GET article list by category id. */
+router.get('/category/:id', function(req, res) {
+    //console.log(req.params.id);
+    Category.findById(req.params.id, function(err, category) {
+        if (err) {
+            console.log("db find error in get /category/" + "id" + ": " + err);
+            res.render('500');
+        } else if (!category) {
+            res.render('404');
+        } else {
+            Post.find({categoryId: req.params.id}).exec(function(err, posts) {
 
+                if (err) {
+                    console.log("db error in GET /categorys: " + err);
+                    res.render('500');
+                } else {
 
-
-    form.on('error', function(err) {
-        console.log("======form err" + err);
-    });
-
-    form.on('fileBegin', function (name, file) {
-        console.dir(file);
-    });
-
-
-    // parse normally
-    form.parse(req, function (err, fields, files) {
-        if(err) {
-            console.dir(err);
-            //todo handle err
+                    res.render('bbs/list', {title:category.name, category:category, posts: posts});
+                }
+            });
         }
-
-        //var file = files.upload;
-        console.dir(fields);
-        console.dir(files);
-
-        //var gfs = Grid(mongoose.connection.db, mongoose.mongo);
-        //// passing a stream
-        //var readstream = gfs.createReadStream({
-        //    _id: file.id
-        //});
-        //
-        //var wid = mongoose.Types.ObjectId();
-        //console.log("=============wid========" + wid);
-        //var writestream = gfs.createWriteStream({
-        //    _id: wid.toString(),
-        //    mode: 'w',
-        //    filename: 'thumbnail' + file.id + '.png',
-        //    content_type: 'image/png'
-        //
-        //});
-        ////
-        //gm(readstream)
-        //    .resize('200', '200')
-        //    .stream('png')
-        //    .pipe(writestream);
-        //
-        //
-        //var m = new Material({
-        //    imgId: file.id,
-        //    thumbnailId: wid
-        //});
-        ////
-        //m.save(function(err) {
-        //    if(err) {
-        //        console.log(err);
-        //        return;
-        //    }
-        //    req.flash('success', 'material added');
-        //    res.redirect('/material');
-        //
-        //})
-
-
-
     });
 
 });
+
+
 
 module.exports = router;

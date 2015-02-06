@@ -76,6 +76,8 @@ bbs发帖
         上传图片
             单张 单张 上传
             最后
+            todo 数据验证
+            todo util image js redirect url 在部署时候需要修改
     3、列出帖
         单个社区列表页面
         单个帖页面

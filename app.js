@@ -18,6 +18,15 @@ var gm = require('gm');
 var Ruby = require('./models/ruby');
 var Post = require('./models/post');
 
+//ejs
+var ejs = require('ejs');
+var moment = require('moment-timezone');
+moment.locale('zh-cn');
+ejs.filters.dateFormat = function(date) {
+    var ret = moment(date).tz("Asia/Shanghai").fromNow();
+    return ret;
+};
+
 
 var app = express();
 

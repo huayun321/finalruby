@@ -24,6 +24,7 @@
 
     "socket.io": "*",
     "socket.io-stream": "*",
-    "async": "*"
+    "async": "*",
+    "moment-timezone": "*"
   }
 }
