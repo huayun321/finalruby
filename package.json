@@ -25,6 +25,8 @@
     "socket.io": "*",
     "socket.io-stream": "*",
     "async": "*",
-    "moment-timezone": "*"
+    "moment-timezone": "*",
+    "passport": "*",
+    "bcrypt": "*"
   }
 }
