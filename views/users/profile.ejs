@@ -218,8 +218,12 @@
             <form method="post" action="/users/change-name" class="ui suc form segment">
                 <% if(message.success) {%>
                 <div class="ui green message">
-
                     <p><%=message.success%></p>
+                </div>
+                <% } %>
+                <% if(message.error) {%>
+                <div class="ui error message">
+                    <p><%=message.error%></p>
                 </div>
                 <% } %>
                 <div class="field">
@@ -233,7 +237,7 @@
                 </div>
                 <div class="field">
                     <label>密码</label>
-                    <a href="/users/chang-password">更改</a>
+                    <a href="/users/change-password">更改</a>
                 </div>
 
                 <input type="submit" value="提交" class="ui blue submit button">

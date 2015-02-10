@@ -24,7 +24,7 @@ finalruby
 搜索 bbs 完整 密码找回
 
 1、修改用户名 done
-2、修改密码
+2、修改密码 form post route
 3、修改头像
 4、发表宝石
 4、添加收藏

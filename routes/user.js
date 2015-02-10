@@ -23,7 +23,9 @@ router.post('/signup', function(req, res) {
                 if (err) {
                     res.render('500');
                 } else {
-                    req.flash('success', "Thank's for signing up! You're now logged in.")
+                    req.flash('success', "Thank's for signing up! You're now logged in.");
+                    res.locals.isLogin = true;
+                    res.locals.user = req.user;
                     res.redirect('/users/profile');
                 }
             });
@@ -69,7 +71,7 @@ router.post('/login', function(req, res) {
                         res.redirect(req.session.redirect);
                         delete req.session.redirect;
                     } else {
-                        res.redirect('/posts');
+                        res.redirect('/users/profile');
                     }
                 }
             });
@@ -79,11 +81,11 @@ router.post('/login', function(req, res) {
 
 router.get('/logout', function(req, res) {
     req.flash('success', "You're now logged out.");
-    res.redirect('/posts');
+    res.redirect('/index');
 });
 
 //user profile change
-router.post('/change-name', function(req, res) {
+router.post('/change-name',  isLogin, function(req, res) {
 
     User
         .findById(req.user.id)
@@ -106,5 +108,51 @@ router.post('/change-name', function(req, res) {
             }
         });
 });
+
+router.get('/change-password',  isLogin, function(req, res) {
+    res.render('users/password', {title: '密码修改'});
+});
+
+router.post('/change-password',  isLogin, function(req, res) {
+    if(!req.user.isValidPassword(req.body.old_password)) {
+        req.flash('danger', "旧密码错误。");
+        res.redirect('/users/change-password');
+
+    } else if (!req.body.new_password || req.body.new_password=='') {
+        req.flash('danger', "新密码不能为空。");
+        res.redirect('/users/change-password');
+
+    } else if(req.body.new_password != req.body.new_password2) {
+        req.flash('danger', "两个新密码不相同。");
+        res.redirect('/users/change-password');
+
+    } else {
+
+        User
+            .findById(req.user.id)
+            .exec(function(err, user) {
+                if (err) {
+                    res.render('500');
+                } else if (!user) {
+                    res.render('404');
+                } else {
+                    user.password = user.generateHash(req.body.new_password);
+                    user.save(function(err) {
+                        if (err) {
+                            res.render('500');
+                        } else {
+                            req.flash('success', "成功修改。");
+                            res.redirect('/users/change-password');
+                        }
+                    });
+
+                }
+            });
+
+    }
+
+
+});
+
 
 module.exports = router;
