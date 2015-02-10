@@ -12,6 +12,7 @@ var users = require('./routes/user');
 var ruby = require('./routes/ruby');
 var gfsimgs = require('./routes/gfsimgs');
 var bbs = require('./routes/bbs');
+var isLogin = require('./routes/isLogin');
 
 var mongoose = require('mongoose');
 var gridform = require('gridform');
@@ -19,6 +20,10 @@ var Grid = require('gridform').gridfsStream;
 var gm = require('gm');
 var Ruby = require('./models/ruby');
 var Post = require('./models/post');
+
+var passport = require('passport');
+var User = require('./models/user');
+var Category = require('./models/category');
 
 //ejs
 var ejs = require('ejs');
@@ -68,7 +73,8 @@ io.of('/bbs').on('connection', function(socket) {
             content: data.content,
             imgs: data.wids,
             thumbnails: data.tids,
-            category: {id:data.category_id, name:data.category_name}
+            category: data.category_id,
+            createdBy: data.user_id
             //user: {}
         });
 
@@ -76,6 +82,21 @@ io.of('/bbs').on('connection', function(socket) {
             if (err) {
                 console.log(err);
                 return;
+            } else {
+                User.findById(data.user_id, function(err, user) {
+                    if(err) {
+                        console.log(err);
+                        return;
+                    } else {
+                        user.posts.push(post.id);
+                        user.save(function(err) {
+                            if (err) {
+                                console.log(err);
+                                return;
+                            }
+                        });
+                    }
+                })
             }
             socket.emit('all-end');
         })
@@ -218,6 +239,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({secret: 'secret', resave: true, saveUninitialized: true, cookie: { maxAge: 60000 }}));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.serializeUser(function(user, done) {
+    done(null, user.id);
+});
+passport.deserializeUser(function(id, done) {
+    User.findById(id, function(err, user) {
+        done(err, user);
+    });
+});
 app.use(flash());
 app.use(function(req, res, next) {
     res.locals.message = req.flash();
@@ -227,9 +258,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
-app.use('/ruby', ruby);
+app.use('/ruby', isLogin, ruby);
 app.use('/gfsimgs', gfsimgs);
-app.use('/bbs', bbs);
+app.use('/bbs', isLogin, bbs);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

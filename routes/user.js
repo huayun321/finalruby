@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
+var isLogin = require('../routes/isLogin');
 
 /* GET users by name */
 router.get('/signup', function(req, res) {
-
   res.render('users/signup', {title: '用户注册'});
 });
 
@@ -31,9 +31,27 @@ router.post('/signup', function(req, res) {
     });
 });
 
+
+router.get('/profile', isLogin, function(req, res) {
+    User
+        .findById(req.user.id)
+        .populate('posts')
+        .exec(function(err, user) {
+            if (err) {
+                res.render('500');
+            } else if (!user) {
+                res.render('404');
+            } else {
+                res.render('users/profile', {title: '用户资料', user:user})
+            }
+        });
+});
+
+
 router.get('/login', function(req, res) {
     res.render('users/login', {title: '用户登录'});
 });
+
 
 router.post('/login', function(req, res) {
     User.findOne({email: req.body.email}, function(err, user) {
@@ -43,8 +61,18 @@ router.post('/login', function(req, res) {
             req.flash('danger', '用户名或密码错误');
             res.redirect('/users/login');
         } else {
-            req.flash('success', "You're now logged in.");
-            res.redirect('/posts');
+            req.login(user, function(err) {
+                if (err) {
+                    res.render('500');
+                } else {
+                    if (req.session.redirect) {
+                        res.redirect(req.session.redirect);
+                        delete req.session.redirect;
+                    } else {
+                        res.redirect('/posts');
+                    }
+                }
+            });
         }
     });
 });
@@ -52,6 +80,31 @@ router.post('/login', function(req, res) {
 router.get('/logout', function(req, res) {
     req.flash('success', "You're now logged out.");
     res.redirect('/posts');
+});
+
+//user profile change
+router.post('/change-name', function(req, res) {
+
+    User
+        .findById(req.user.id)
+        .exec(function(err, user) {
+            if (err) {
+                res.render('500');
+            } else if (!user) {
+                res.render('404');
+            } else {
+                user.name = req.body.name;
+                user.save(function(err) {
+                    if (err) {
+                        res.render('500');
+                    } else {
+                        req.flash('success', "成功修改。");
+                        res.redirect('/users/profile');
+                    }
+                });
+
+            }
+        });
 });
 
 module.exports = router;

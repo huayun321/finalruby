@@ -7,14 +7,8 @@ var schema = mongoose.Schema({
   createdOn: { type: Date, default: Date.now },
   imgs:[mongoose.Schema.Types.ObjectId],
   thumbnails:[mongoose.Schema.Types.ObjectId],
-  category: {
-      id: mongoose.Schema.Types.ObjectId,
-      name: String
-  },
-  user: {
-      id: mongoose.Schema.Types.ObjectId,
-      username: String
-  }
+  category: {type:mongoose.Schema.Types.ObjectId, ref: 'category'},
+  createdBy: {type:mongoose.Schema.Types.ObjectId, ref: 'users'}
 });
 
 //schema.statics.getPostsByCategorys = function (categorys, cb) {

@@ -13,9 +13,7 @@
     <script src="/javascripts/jquery-2.1.3.min.js"></script>
     <script src="/dist/semantic.js"></script>
 
-    <!--moment-->
-    <script src="/javascripts/moment/moment-with-locales.js"></script>
-    <script src="/javascripts/moment/moment-timezone-with-data.js"></script>
+
 
 </head>
 <body>
@@ -70,7 +68,7 @@
                     <img src="/images/avatar/small/joe.jpg">
                 </a>
                 <div class="content">
-                    <a class="author"><%= post.user.username %></a>
+                    <a class="author"><%= post.createdBy.name %></a>
                     <div class="text">
 
                         <%- post.content %>

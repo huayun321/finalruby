@@ -13,6 +13,7 @@ var async = require('async');
 
 /* GET template list  page. */
 router.get('/', function(req, res) {
+    console.log(req.user);
     Category.find({}).exec(function(err, categorys) {
         if (err) {
             console.log("db error in GET /categorys: " + err);
@@ -50,16 +51,17 @@ router.get('/category/:id', function(req, res) {
         } else if (!category) {
             res.render('404');
         } else {
-            Post.find({'category.id':req.params.id}).exec(function(err, posts) {
+            Post.find({category:req.params.id}).populate('createdBy').exec(function(err, posts) {
 
                 if (err) {
                     console.log("db error in GET /categorys: " + err);
                     res.render('500');
                 } else {
-
+                    //res.send(posts);
                     res.render('bbs/list', {title:category.name, category:category, posts: posts});
                 }
             });
+            //res.send(category);
         }
     });
 
@@ -68,7 +70,10 @@ router.get('/category/:id', function(req, res) {
 /* GET article list by category id. */
 router.get('/post/:id', function(req, res) {
     //console.log(req.params.id);
-    Post.findById(req.params.id, function(err, post) {
+    Post.findById(req.params.id)
+        .populate('createdBy')
+        .populate('category')
+        .exec(function(err, post) {
         if (err) {
             console.log("db find error in get /post/" + "id" + ": " + err);
             res.render('500');
@@ -76,7 +81,7 @@ router.get('/post/:id', function(req, res) {
             res.render('404');
         } else {
             res.render('bbs/post', {title:post.title, post:post});
-
+            //res.json(post);
         }
     });
 

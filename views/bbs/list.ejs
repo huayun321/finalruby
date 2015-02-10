@@ -69,7 +69,7 @@
             <tr>
                 <td><a href="/bbs/post/<%=post.id%>"><%=post.title%></a></td>
                 <td><%=: post.createdOn | dateFormat %></td>
-                <td><%=post.userId%></td>
+                <td><%=post.createdBy.name%></td>
 
             </tr>
             <% }) %>
