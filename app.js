@@ -67,6 +67,52 @@ db.once('open', function() {
 
 //socket.io logic
 io.of('/bbs').on('connection', function(socket) {
+    ss(socket).on('avatar', function(stream, data) {
+        var user_id = data.user_id;
+        gfs = Grid(mongoose.connection.db, mongoose.mongo);
+        var writestream = gfs.createWriteStream({
+        });
+        //progress
+        var uploaded = 0;
+        var progress = 0;
+        stream.on('data', function (chunk) {
+            uploaded += chunk.length;
+            progress = uploaded / data.size * 100;
+            socket.emit('progress', {progress:progress});
+            console.log("on upload progress:" + uploaded / data.size * 100);
+        });
+        stream.on('end', function () {
+            User.findById(user_id, function(err, user) {
+               if(err) {
+                   socket.emit('err', err);
+               } else {
+                   user.avatar = writestream.id;
+                   user.save(function(err) {
+                       if(err) {
+                           socket.emit('err', err);
+                       } else {
+                           socket.emit('end-upload');
+                       }
+                   });
+               }
+            });
+
+        });
+
+        //error
+        stream.on('error', function (err) {
+            console.log(err);
+            socket.emit('err', err);
+        });
+
+        //save to grid
+        gm(stream)
+            .resize('200', '200')
+            .stream('png')
+            .pipe(writestream);
+
+    });
+
     socket.on('post', function(data) {
         var post = new Post({
             title: data.title,

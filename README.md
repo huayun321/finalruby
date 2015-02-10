@@ -25,7 +25,7 @@ finalruby
 
 1、修改用户名 done
 2、修改密码 form post route
-3、修改头像
+3、修改头像 form socketio 
 4、发表宝石
 4、添加收藏
 5、回复帖子

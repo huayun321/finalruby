@@ -154,5 +154,9 @@ router.post('/change-password',  isLogin, function(req, res) {
 
 });
 
+router.get('/change-avatar',  isLogin, function(req, res) {
+    res.render('users/avatar', {title: '头像修改'});
+});
+
 
 module.exports = router;

@@ -228,7 +228,13 @@
                 <% } %>
                 <div class="field">
                     <label>头像</label>
-                    <img src=""><a href="/users/chang-avatar">更改</a>
+                    <% if(user.avatar) {%>
+                    <img class="ui small image" src="/gfsimgs/<%=user.avatar%>">
+                    <% } else { %>
+                    <img class="ui small image" src="/imgs/jenny.jpg">
+
+                    <% } %>
+                    <a href="/users/change-avatar">更改</a>
                 </div>
 
                 <div class="field">
