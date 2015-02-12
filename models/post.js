@@ -11,6 +11,8 @@ var schema = mongoose.Schema({
   createdBy: {type:mongoose.Schema.Types.ObjectId, ref: 'users'}
 });
 
+
+
 //schema.statics.getPostsByCategorys = function (categorys, cb) {
 //    categorys.foreach(function(category) {
 //        this.find({ name: new RegExp(name, 'i') }, cb);

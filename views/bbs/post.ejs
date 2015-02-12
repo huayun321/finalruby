@@ -65,16 +65,20 @@
         <div class="ui comments">
             <div class="comment">
                 <a class="avatar">
-                    <img src="/images/avatar/small/joe.jpg">
+                    <img src="/gfsimgs/<%=post.createdBy.avatar%>">
                 </a>
                 <div class="content">
-                    <a class="author"><%= post.createdBy.name %></a>
+                    <a href="/users/<%=post.createdBy.id%>" class="author"><%= post.createdBy.name %></a>
+                    <div class="metadata">
+                        <span class="date"><%=: post.createdOn | dateFormat %></span>
+                    </div>
                     <div class="text">
 
                         <%- post.content %>
                         <% post.thumbnails.forEach( function(id) { %>
                             <img src="/gfsimgs/<%=id%>">
                         <% }) %>
+                        <p></p>
                     </div>
                     <!--<div class="actions">-->
                         <!--<a class="reply">Reply</a>-->
@@ -89,111 +93,42 @@
             </div>
         </div>
 
-        <div class="ui comments">
-            <h3 class="ui dividing header">Comments</h3>
-            <div class="comment">
-                <a class="avatar">
-                    <img src="/images/avatar/small/matt.jpg">
-                </a>
-                <div class="content">
-                    <a class="author">Matt</a>
-                    <div class="metadata">
-                        <span class="date">Today at 5:42PM</span>
-                    </div>
-                    <div class="text">
-                        How artistic!
-                    </div>
-                    <div class="actions">
-                        <a class="reply">Reply</a>
-                    </div>
-                </div>
-            </div>
-            <div class="comment">
-                <a class="avatar">
-                    <img src="/images/avatar/small/elliot.jpg">
-                </a>
-                <div class="content">
-                    <a class="author">Elliot Fu</a>
-                    <div class="metadata">
-                        <span class="date">Yesterday at 12:30AM</span>
-                    </div>
-                    <div class="text">
-                        <p>This has been very useful for my research. Thanks as well!</p>
-                    </div>
-                    <div class="actions">
-                        <a class="reply">Reply</a>
-                    </div>
-                </div>
-                <div class="comments">
-                    <div class="comment">
-                        <a class="avatar">
-                            <img src="/images/avatar/small/jenny.jpg">
-                        </a>
-                        <div class="content">
-                            <a class="author">Jenny Hess</a>
-                            <div class="metadata">
-                                <span class="date">Just now</span>
-                            </div>
-                            <div class="text">
-                                Elliot you are always so right :)
-                            </div>
-                            <div class="actions">
-                                <a class="reply">Reply</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="comment">
-                <a class="avatar">
-                    <img src="/images/avatar/small/joe.jpg">
-                </a>
-                <div class="content">
-                    <a class="author">Joe Henderson</a>
-                    <div class="metadata">
-                        <span class="date">5 days ago</span>
-                    </div>
-                    <div class="text">
-                        Dude, this is awesome. Thanks so much
-                    </div>
-                    <div class="actions">
-                        <a class="reply">Reply</a>
-                    </div>
-                </div>
-            </div>
-            <form class="ui reply form">
-                <div class="field">
-                    <textarea></textarea>
-                </div>
-                <div class="ui blue labeled submit icon button">
-                    <i class="icon edit"></i> Add Reply
-                </div>
-            </form>
-        </div>
+        <h3 class="ui dividing header"></h3>
 
-        <div class="ui pagination menu">
-            <a class="icon item">
-                <i class="left arrow icon"></i>
-            </a>
-            <a class="active item">
-                1
-            </a>
-            <div class="disabled item">
-                ...
+        <% comments.forEach(function(comment) { %>
+        <div class="ui comments">
+
+
+            <div class="comment">
+                <a class="avatar">
+                    <img src="/gfsimgs/<%=comment.createdBy.avatar%>">
+                </a>
+                <div class="content">
+                    <a href="/users/<%=post.createdBy.id%>" class="author"><%=comment.createdBy.name%></a>
+                    <div class="metadata">
+                        <span class="date"><%=: comment.createdOn | dateFormat %></span>
+                    </div>
+                    <div class="text">
+                        <%=comment.content%>
+                    </div>
+
+                </div>
             </div>
-            <a class="item">
-                10
-            </a>
-            <a class="item">
-                11
-            </a>
-            <a class="item">
-                12
-            </a>
-            <a class="icon item">
-                <i class="right arrow icon"></i>
-            </a>
+
         </div>
+        <% }) %>
+
+        <form method="post" action="/bbs/comment" class="ui reply form">
+            <input name="userid" type="hidden" value="<%=user.id%>">
+            <input name="postid" type="hidden" value="<%=post.id%>">
+            <div class="field">
+                <textarea name="content"></textarea>
+            </div>
+            <input type="submit" value="提交" class="ui blue labeled submit icon button">
+
+        </form>
+
+
     </div>
 
 

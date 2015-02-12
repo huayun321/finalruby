@@ -42,7 +42,11 @@
 
 
 <div style="margin: 30px 20px">
-    <% categorys.forEach( function(category) { %>
+    <%
+        var i = 0;
+    categorys.forEach( function(category) {
+
+    %>
     <div class="ui blue  piled segment">
         <h4 class="ui left floated header">
             <a href="/bbs/category/<%= category.id %>">
@@ -60,34 +64,27 @@
                 <th class="eight wide">标题</th>
                 <th class="four wide">日期</th>
                 <th class="two wide">作者</th>
-                <th class="two wide">评论</th>
+
             </tr>
             </thead>
             <tbody>
+            <% posts[i].forEach(function(post) {%>
+
             <tr>
-                <td><a href="#">大家看看我做的这个宝石是不是很吊啊？</a></td>
-                <td>September 14, 2013</td>
-                <td>jhlilk22@yahoo.com</td>
-                <td>No</td>
+                <td><a href="/bbs/post/<%=post.id%>"><%=post.title%></a></td>
+                <td><%=: post.createdOn | dateFormat %></td>
+                <td><a href="users/<%=post.createdBy.id%>"><%=post.createdBy.name%></a></td>
+
+
             </tr>
-            <tr>
-                <td>Jamie Harington</td>
-                <td>January 11, 2014</td>
-                <td>jamieharingonton@yahoo.com</td>
-                <td>Yes</td>
-            </tr>
-            <tr>
-                <td>Jill Lewis</td>
-                <td>May 11, 2014</td>
-                <td>jilsewris22@yahoo.com</td>
-                <td>Yes</td>
-            </tr>
+            <% }) %>
+
             </tbody>
         </table>
 
     </div>
     <!--a category end-->
-    <% }) %>
+    <% i++; }) %>
 
 
 

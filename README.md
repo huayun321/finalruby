@@ -29,6 +29,7 @@ finalruby
 4、发表宝石 ruby user schema profile route
 4、添加收藏 完成首页和用户的收藏功能
 5、回复帖子
+6 关注
 6、文章搜索
 9、整理头尾
 7、登录推出
