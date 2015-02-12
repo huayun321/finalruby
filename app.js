@@ -97,7 +97,7 @@ io.of('/index').on('connection', function(socket) {
                     socket.emit('error', 'error on find user');
                 } else {
                     var index = user.likes.indexOf(data.ruby_id);
-                    delete user.likes[index];
+                    user.likes.remove(data.ruby_id);
                     user.save(function(err) {
                         if(err) {
                             console.log(err);

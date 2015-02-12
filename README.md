@@ -27,7 +27,7 @@ finalruby
 2、修改密码 form post route
 3、修改头像 form socketio 
 4、发表宝石 ruby user schema profile route
-4、添加收藏
+4、添加收藏 完成首页和用户的收藏功能
 5、回复帖子
 6、文章搜索
 9、整理头尾

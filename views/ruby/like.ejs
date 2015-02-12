@@ -46,13 +46,13 @@
             <a href="/user/<%=ruby.createdBy.id%>"><%=ruby.createdBy.name%></a>
             的宝石
         </h4>
-        <%if(-1 != user.rubies.indexOf(ruby.id)) {%>
-        <a href="/ruby/del/<%=ruby.id %>" class="small ui right floated teal  header label ">
-            删除
+        <%if(-1 != user.likes.indexOf(ruby.id)) {%>
+        <a href="/ruby/unlike/<%=ruby.id %>" class="small ui right floated teal  header label ">
+            取消收藏
         </a>
         <% } else { %>
-        <a href="/ruby/like/<%=ruby.id %>" class="small ui right floated teal  header label ">
-            删除
+        <a href="/ruby/dolike/<%=ruby.id %>" class="small ui right floated teal  header label ">
+            收藏
         </a>
         <% } %>
         <div class="ui clearing divider"></div>

@@ -79,10 +79,11 @@
         </div>
         <div class="ui bottom attached tab segment" data-tab="second">
             <div class="ui small images">
-                <img src="/imgs/a.jpg">
-                <img src="/imgs/a.jpg">
-                <img src="/imgs/a.jpg">
-                <img src="/imgs/a.jpg">
+                <% user.likes.forEach(function(ruby) {%>
+                <a href="/ruby/like/<%=ruby.id%>">
+                    <img style="border:1px solid #ccc" src="/gfsimgs/<%=ruby.thumbnailId%>">
+                </a>
+                <% }) %>
             </div>
         </div>
         <div class="ui bottom attached tab segment" data-tab="third">

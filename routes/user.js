@@ -44,6 +44,7 @@ router.get('/profile', isLogin, function(req, res) {
         .findById(req.user.id)
         .populate('posts')
         .populate('rubies')
+        .populate('likes')
         .exec(function(err, user) {
             if (err) {
                 res.render('500');
