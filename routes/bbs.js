@@ -127,7 +127,7 @@ router.get('/post/:id', function(req, res) {
 
 });
 
-router.post('/comment/', function(req, res) {
+router.post('/comment', function(req, res) {
     comment = new Comment();
     comment.content = req.body.content;
     comment.createdBy = req.body.userid;

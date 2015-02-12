@@ -5,7 +5,12 @@ var isLogin = require('../routes/isLogin');
 
 /* GET users by name */
 router.get('/signup', function(req, res) {
-  res.render('users/signup', {title: '用户注册'});
+    if(req.user) {
+        res.render('users/signup', {title:'用户注册',  user:req.user});
+    } else {
+        res.render('users/signup', {title:'用户注册', user:null});
+    }
+
 });
 
 router.post('/signup', function(req, res) {
@@ -58,7 +63,11 @@ router.get('/profile', isLogin, function(req, res) {
 
 
 router.get('/login', function(req, res) {
-    res.render('users/login', {title: '用户登录'});
+    if(req.user) {
+        res.render('users/login', {title:'用户登录',  user:req.user});
+    } else {
+        res.render('users/login', {title:'用户登录', user:null});
+    }
 });
 
 
@@ -89,7 +98,8 @@ router.post('/login', function(req, res) {
 
 router.get('/logout', function(req, res) {
     req.flash('success', "You're now logged out.");
-    res.redirect('/index');
+    req.logout();
+    res.redirect('/');
 });
 
 //user profile change

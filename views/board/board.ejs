@@ -16,13 +16,8 @@
     <script src="/dist/semantic.js"></script>
     <!-- fabric JavaScript -->
     <script src="/javascripts/fabric.min.js"></script>
-    <!--socket io-->
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/socket.io-stream.js"></script>
-    <script>
 
 
-    </script>
 
 </head>
 
@@ -47,14 +42,14 @@
     边栏
 </div>
 
-<div class="ui top fixed blue inverted large menu">
-    <a class="item">
+<div class="ui top fixed teal inverted menu">
+    <a href="/" class="active item">
         <i class="home icon"></i> 首页
     </a>
-    <a class="item">
+    <a href="/board" class="item">
         <i class="mail icon"></i> 宝石袋
     </a>
-    <a class="active item">
+    <a href="/bbs" class="item">
         <i class="mail icon"></i> 社区
     </a>
     <div class="right menu">
@@ -64,15 +59,21 @@
                 <i class="search link icon"></i>
             </div>
         </div>
-        <a class="item">注册</a>
-        <a class="item">登录</a>
+        <%if(user) { %>
+        <a href="/users/profile" class="item"><%=user.name%>的帐号</a>
+        <a href="/users/logout"  class="item">退出</a>
+        <%} else { %>
+        <a href="/users/login" class="item">登录</a>
+        <a href="/users/logout"  class="item">退出</a>
+        <% } %>
     </div>
 
 </div>
 
 
-
-
+<!--socket io-->
+<script src="/socket.io/socket.io.js"></script>
+<script src="/socket.io-stream.js"></script>
 
 <div class="pusher" style="padding: 50px 0">
 
@@ -143,9 +144,12 @@
 </script>
 <script src="/javascripts/board.js"></script>
 
-<div class="ui gray segment">
-    powered by oocomic.com
-</div>
+    <div class="ui clearing divider"></div>
+    <div>
+        powered by oocomic.com
+        <br>
+    </div>
+
 </div>
 <!--end pusher-->
 </body>

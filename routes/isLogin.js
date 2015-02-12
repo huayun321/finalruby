@@ -4,7 +4,6 @@ function isLogin(req, res, next) {
         req.session.redirect = req.originalUrl;
         res.redirect('/users/login');
     }  else {
-        res.locals.isLogin = true;
         res.locals.user = req.user;
         next();
     }
