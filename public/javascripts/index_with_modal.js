@@ -24,7 +24,7 @@ function show_user() {
 
     var user_id = '';
     var like_icon = null;
-        var socket = io.connect('http://localhost:3000/index');
+        var socket = io.connect('http://918diy.com:3000/index');
 
         socket.on("connect",function() {
             console.log("on connect");

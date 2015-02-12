@@ -6,7 +6,7 @@ $( document ).ready(function() {
 
     //socket.io thing
     $(function() {
-        var socket = io.connect('http://localhost:3000/bbs');
+        var socket = io.connect('http://918diy.com:3000/bbs');
 
         socket.on("connect",function() {
             console.log("on connect");
@@ -40,7 +40,7 @@ $( document ).ready(function() {
         });
 
         socket.on('all-end', function(data) {
-            window.location.replace('http://localhost:3000/bbs/category/'+ category_id);
+            window.location.replace('http://918diy.com:3000/bbs/category/'+ category_id);
         });
 
         function dataURItoBlob(dataURI) {
