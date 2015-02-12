@@ -2,8 +2,8 @@
 var mongoose = require('mongoose');
 
 var schema = mongoose.Schema({
-  title: String,
-  content: String,
+  title: { type: String, index: true, default: '' },
+  content: { type: String,  default: '' },
   createdOn: { type: Date, default: Date.now },
   imgs:[mongoose.Schema.Types.ObjectId],
   thumbnails:[mongoose.Schema.Types.ObjectId],
