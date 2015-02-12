@@ -49,7 +49,16 @@
             关注
         </a>
         <div class="ui clearing divider"></div>
-
+        <% if(message.success) {%>
+        <div class="ui green message">
+            <p><%=message.success%></p>
+        </div>
+        <% } %>
+        <% if(message.danger) {%>
+        <div class="ui error message">
+            <p><%=message.danger%></p>
+        </div>
+        <% } %>
         <div id="show-box" class="ui top attached tabular menu">
             <a class="active item" data-tab="first">我的宝石</a>
             <a class="item" data-tab="second">我的收藏</a>
@@ -59,11 +68,14 @@
         </div>
         <div class="ui bottom attached active tab segment" data-tab="first">
             <div class="ui small images">
-                <img src="/imgs/a.jpg">
-                <img src="/imgs/a.jpg">
-                <img src="/imgs/a.jpg">
-                <img src="/imgs/a.jpg">
+                <% user.rubies.forEach(function(ruby) {%>
+                <a href="/ruby/<%=ruby.id%>">
+                <img style="border:1px solid #ccc" src="/gfsimgs/<%=ruby.thumbnailId%>">
+                </a>
+                <% }) %>
             </div>
+            <!--cards start-->
+
         </div>
         <div class="ui bottom attached tab segment" data-tab="second">
             <div class="ui small images">

@@ -7,7 +7,7 @@ var schema = mongoose.Schema({
     password: {type: String, require: true},
     admin: {type: Boolean, default: false},
 
-    name: {type: String, trim: true, unique: true, default:'佚名'},
+    name: {type: String, trim: true,  default:'临时用户名'},
     avatar: mongoose.Schema.Types.ObjectId,
     rubies: [{type:mongoose.Schema.Types.ObjectId, ref: 'ruby'}],
     likes: [{type:mongoose.Schema.Types.ObjectId, ref: 'ruby'}],

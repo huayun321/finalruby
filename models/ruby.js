@@ -4,7 +4,7 @@ var schema = mongoose.Schema({
     imgId: mongoose.Schema.Types.ObjectId,
     thumbnailId: mongoose.Schema.Types.ObjectId,
     tags: [String],
-    userId: mongoose.Schema.Types.ObjectId,
+    createdBy: {type:mongoose.Schema.Types.ObjectId, ref: 'users'},
     nice: Boolean,
     createdOn: { type: Date, default: Date.now }
 });

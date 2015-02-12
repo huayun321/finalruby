@@ -9,10 +9,11 @@ var flash = require('connect-flash');
 
 var routes = require('./routes/index');
 var users = require('./routes/user');
-var ruby = require('./routes/ruby');
+var board = require('./routes/board');
 var gfsimgs = require('./routes/gfsimgs');
 var bbs = require('./routes/bbs');
 var isLogin = require('./routes/isLogin');
+var ruby = require('./routes/ruby');
 
 var mongoose = require('mongoose');
 var gridform = require('gridform');
@@ -65,6 +66,50 @@ db.once('open', function() {
     gridform.mongo = mongoose.mongo;
 });
 
+//socket.io index logic
+io.of('/index').on('connection', function(socket) {
+   socket.on('like', function(data) {
+       User.findById(data.user_id)
+           .populate('rubies')
+           .exec(function(err, user) {
+           if(err) {
+               console.log(err);
+               socket.emit('error', 'error on find user');
+           } else {
+               user.likes.push(data.ruby_id);
+               user.save(function(err) {
+                   if(err) {
+                       console.log(err);
+                       socket.emit('error', 'save on find user');
+                   } else {
+                       socket.emit('ok', '收藏成功');
+                   }
+               });
+           }
+       });
+   });
+    socket.on('unlike', function(data) {
+        User.findById(data.user_id)
+            .populate('rubies')
+            .exec(function(err, user) {
+                if(err) {
+                    console.log(err);
+                    socket.emit('error', 'error on find user');
+                } else {
+                    var index = user.likes.indexOf(data.ruby_id);
+                    delete user.likes[index];
+                    user.save(function(err) {
+                        if(err) {
+                            console.log(err);
+                            socket.emit('error', 'error on save user');
+                        } else {
+                            socket.emit('ok', '取消收藏成功');
+                        }
+                    });
+                }
+            });
+    });
+});
 //socket.io logic
 io.of('/bbs').on('connection', function(socket) {
     ss(socket).on('avatar', function(stream, data) {
@@ -239,8 +284,8 @@ io.of('/user').on('connection', function(socket) {
                 imgId: writestream.id,
                 thumbnailId: tws.id,
                 tags: data.tags,
-                nice: false
-                //user_id:
+                nice: false,
+                createdBy: data.user_id
             });
 
             ruby.save(function (err) {
@@ -248,8 +293,24 @@ io.of('/user').on('connection', function(socket) {
                     console.log(err);
                     return;
                 }
-                progress = 100;
-                socket.emit('progress', progress);
+
+
+                User.findById(data.user_id, function(err,user) {
+                   if(err) {
+                       socket.emit('err', err);
+                   } else {
+                       user.rubies.push(ruby.id);
+                       user.save(function(err) {
+                           if(err) {
+                               socket.emit('err', err);
+                           } else {
+                               progress = 100;
+                               socket.emit('progress', progress);
+                           }
+                       });
+                   }
+                });
+
             })
 
         });
@@ -304,9 +365,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
-app.use('/ruby', isLogin, ruby);
+app.use('/board', isLogin, board);
 app.use('/gfsimgs', gfsimgs);
 app.use('/bbs', isLogin, bbs);
+app.use('/ruby', isLogin, ruby);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

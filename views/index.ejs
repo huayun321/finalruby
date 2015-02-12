@@ -14,6 +14,9 @@
 
     <script src="/javascripts/jquery-2.1.3.min.js"></script>
     <script src="/semantic/semantic.js"></script>
+    <!--socket io-->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/socket.io-stream.js"></script>
     <script src="/javascripts/index_with_modal.js"></script>
 
 </head>
@@ -40,6 +43,10 @@
     </div>
 
 </div>
+
+<% if(user){ %>
+<input id="user_id" type="hidden" value="<%=user.id%>">
+<% } %>
 
 <!--user modal-->
 <div id="user_modal" class="ui modal">
@@ -224,16 +231,24 @@
             </a>
 
         <div class="content">
-            <a onclick="show_user()" class="header">Stevie Feliciano</a>
+            <a onclick="show_user()" class="header"></a>
             <div class="meta">
-                <span class="date">Joined in 2014</span>
+                <span class="date"><%=: ruby.createdOn | dateFormat%></span>
             </div>
 
         </div>
         <div class="extra content">
-            <span class="like">
+            <span id="<%=ruby.id%>" class="like">
+                <% if(user && ( -1!=user.likes.indexOf(ruby.id) ) ) { %>
+                <i  onclick="unlike('<%=ruby.id%>')" class="red like icon"></i>
+                 <span>取消收藏</span>
+                <% } else if(user && ( -1 ==user.likes.indexOf(ruby.id)) ){ %>
+                <i  onclick="like('<%=ruby.id%>')" class="like icon"></i>
+                <span>收藏</span>
+                <% } else { %>
                 <i class="like icon"></i>
-                收藏
+                <span>收藏</span>
+                <% } %>
               </span>
             &nbsp;&nbsp;&nbsp;&nbsp;
             <a onclick="show_detail()">

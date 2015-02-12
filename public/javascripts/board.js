@@ -1,4 +1,5 @@
 $( document ).ready(function() {
+    var user_id = '';
     //sidebar setting
     $('.sidebar').first().sidebar({
 
@@ -75,7 +76,7 @@ $( document ).ready(function() {
                 console.log('end');
             });
 
-            ss(socket).emit('profile-image', stream, {size:blob.size, tags: $('#input_tags').val()});
+            ss(socket).emit('profile-image', stream, {size:blob.size, user_id:user_id, tags: $('#input_tags').val()});
             blobStream.pipe(stream);
         });
 
@@ -83,6 +84,7 @@ $( document ).ready(function() {
 
     //on click save
     $('#save').click(function() {
+        user_id = $('#user_id').val();
         $('#upload_form').modal('setting', 'closable', false)
                          .modal('show');
         $('#upload_over').addClass('disabled');

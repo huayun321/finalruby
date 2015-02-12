@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var gridform = require('gridform');
 
 // database connection
-mongoose.connect('mongodb://localhost/ruby');
+mongoose.connect('mongodb://localhost/board');
 var db = mongoose.connection;
 
 db.on('error', function(msg) {

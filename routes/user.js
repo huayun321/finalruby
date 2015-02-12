@@ -19,14 +19,19 @@ router.post('/signup', function(req, res) {
             var user = new User();
             user.email = req.body.email;
             user.password = user.generateHash(req.body.password);
+
             user.save(function(err) {
                 if (err) {
+                    console.log(err);
                     res.render('500');
                 } else {
-                    req.flash('success', "Thank's for signing up! You're now logged in.");
-                    res.locals.isLogin = true;
-                    res.locals.user = req.user;
-                    res.redirect('/users/profile');
+                    req.login(user, function(err) {
+                        if(err) {
+                            res.render('500');
+                        } else {
+                            res.redirect('/users/profile');
+                        }
+                    });
                 }
             });
         }
@@ -38,6 +43,7 @@ router.get('/profile', isLogin, function(req, res) {
     User
         .findById(req.user.id)
         .populate('posts')
+        .populate('rubies')
         .exec(function(err, user) {
             if (err) {
                 res.render('500');
@@ -71,6 +77,7 @@ router.post('/login', function(req, res) {
                         res.redirect(req.session.redirect);
                         delete req.session.redirect;
                     } else {
+
                         res.redirect('/users/profile');
                     }
                 }

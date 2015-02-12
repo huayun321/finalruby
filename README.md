@@ -26,13 +26,14 @@ finalruby
 1、修改用户名 done
 2、修改密码 form post route
 3、修改头像 form socketio 
-4、发表宝石
+4、发表宝石 ruby user schema profile route
 4、添加收藏
 5、回复帖子
 6、文章搜索
+9、整理头尾
 7、登录推出
 8、找回密码
-9、整理头尾
+
 
 ##搜索
     标题搜索

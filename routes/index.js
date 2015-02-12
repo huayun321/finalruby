@@ -4,12 +4,20 @@ var Ruby = require('../models/ruby');
 
 /* GET home page. */
 router.get('/', function(req, res) {
-    Ruby.find({}).exec(function(err, rubies) {
+    Ruby.find()
+        .populate('createdBy')
+        .sort('-createdOn')
+        .exec(function(err, rubies) {
         if (err) {
             console.log("db error in GET /rubies: " + err);
             res.render('500');
         } else {
-            res.render('index', {title:'918diy', rubies: rubies});
+            if(req.user) {
+                res.render('index', {title:'918diy', rubies: rubies, user:req.user});
+            } else {
+                res.render('index', {title:'918diy', rubies: rubies, user:null});
+            }
+
         }
     });
 
