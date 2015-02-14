@@ -23,7 +23,7 @@ $( document ).ready(function() {
 
     //socket.io thing
     $(function() {
-        var socket = io.connect('http://918diy.com:3000/user');
+        var socket = io.connect('http://localhost:3000/user');
 
         socket.on("connect",function() {
             console.log("on connect");
