@@ -244,17 +244,28 @@ io.of('/user').on('connection', function(socket) {
     ss(socket).on('profile-image', function(stream, data) {
         console.log("saving...");
         //process tags
-        data.tags = data.tags || null;
-        if(data.tags && (data.tags != '') ) {
-            data.tags = data.tags.split(' ');
+
+        if(data.tags.trim() == '') {
+            data.tags = null;
+        } else {
+            data.tags = data.tags.trim().split(/\s+/);
             var tags = [];
             data.tags.forEach(function(tag) {
-               if (tag != ' ') {
-                   tags.push(tag);
-               }
+                if(tag.length <= 20) {
+                    tags.push(tag);
+                }
+
             });
-            data.tags = tags;
+            if(tags.length >= 1) {
+                data.tags = tags;
+            } else {
+                data.tags = null;
+            }
+
         }
+
+
+
         //init id gfs stream
         gfs = Grid(mongoose.connection.db, mongoose.mongo);
         //var iid = mongoose.Types.ObjectId();
